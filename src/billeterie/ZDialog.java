@@ -6,6 +6,10 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -107,7 +111,7 @@ public class ZDialog extends JDialog {
 	    panPlace.setBorder(BorderFactory.createTitledBorder("Places Disponibles"));
 	    panPlace.setPreferredSize(new Dimension(440, 60));
 	    tranche1 = new JRadioButton("Assis");
-	    tranche1.setSelected(true);
+//	    tranche1.setSelected(true);
 	    tranche2 = new JRadioButton("Debout");
 	    ButtonGroup bg = new ButtonGroup();
 	    bg.add(tranche1);
@@ -128,9 +132,66 @@ public class ZDialog extends JDialog {
 	    JButton okBouton = new JButton("Valider");
 	    
 	    okBouton.addActionListener(new ActionListener(){
-	      public void actionPerformed(ActionEvent arg0) {        
+	    	
+	      public void actionPerformed(ActionEvent arg0) {    
+	    	  
 	        zInfo = new ZDialogInfo(nom.getText(), prenom.getText(), mail.getText(), (String)sexe.getSelectedItem(), (String)concert.getSelectedItem(), getPlace());
 	        setVisible(false);
+	        
+	        if(bg.getSelection().getActionCommand() == "Assis"){
+	        		String tranche1 = "place assise";
+	        	
+	        
+	        //pont qui existe entre la BDD et appli = Build path
+			//exception faite au cas où le mot de passe de fonctionnerait pas
+	        try {
+			      Class.forName("org.postgresql.Driver");
+			      System.out.println("Driver O.K.");
+
+			      //correspond à l'adresse de la base de données
+			      String url = "jdbc:postgresql://localhost:5432/Billeterie";
+			      String user = "postgres";
+			      String passwd = "marion";
+
+			      //permet la communication entre la BDD et l'appli.
+			      Connection conn = DriverManager.getConnection(url, user, passwd);
+			      System.out.println("Connexion effective !");
+			      
+			      Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+			      stm.executeUpdate("INSERT INTO billet (nom, prenom, email, groupe, sexe, typeplace) VALUES('"+nom.getText()+"','"+prenom.getText()+"','"+mail.getText()+"','"+concert.getSelectedItem()+"','"+sexe.getSelectedItem()+"','"+tranche1+"')");
+			      System.out.println("Info");
+			      
+			         
+			    } catch (Exception e) {
+			      e.printStackTrace();
+			    }
+			
+	      }else {
+	    	  	String tranche2 = "place debout";
+	    	  	try {
+				      Class.forName("org.postgresql.Driver");
+				      System.out.println("Driver O.K.");
+
+				      //correspond à l'adresse de la base de données
+				      String url = "jdbc:postgresql://localhost:5432/Billeterie";
+				      String user = "postgres";
+				      String passwd = "marion";
+
+				      //permet la communication entre la BDD et l'appli.
+				      Connection conn = DriverManager.getConnection(url, user, passwd);
+				      System.out.println("Connexion effective !");
+				      
+				      Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+				      stm.executeUpdate("INSERT INTO billet (nom, prenom, email, groupe, sexe, typeplace) VALUES('"+nom.getText()+"','"+prenom.getText()+"','"+mail.getText()+"','"+concert.getSelectedItem()+"','"+sexe.getSelectedItem()+"','"+tranche2+"')");
+				      System.out.println("Info");
+				      
+				         
+				    } catch (Exception e) {
+				      e.printStackTrace();
+				    }
+	      	}
+	        
+	        
 	      }
 	     
 	      public String getPlace(){
