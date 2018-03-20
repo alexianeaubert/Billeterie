@@ -43,7 +43,7 @@ public class Formulaire extends JDialog {
 	  }
 
 	  public PopUpInfo showFormulaire(){
-	    this.sendData = false;
+//	    this.sendData = true;
 	    this.setVisible(true);      
 	    return this.zInfo;      
 	  }
@@ -129,15 +129,6 @@ public class Formulaire extends JDialog {
 	    bg.add(place2);
 	    panPlace.add(place1);
 	    panPlace.add(place2);
-	    
-//	    JPanel panPrix = new JPanel();
-//	    panPrix.setBackground(Color.white);
-//	    panPrix.setBorder(BorderFactory.createTitledBorder("Prix"));
-//	    panPrix.setPreferredSize(new Dimension(500, 60));
-//	    prixLabel = new JLabel("150€");
-//		Font police1 = new Font("Tahoma", Font.BOLD, 12);
-//		prixLabel.setFont(police1);
-//		panPrix.add(prixLabel);
 	  
 	  	JPanel content = new JPanel();
 	    content.setBackground(Color.WHITE);
@@ -147,43 +138,43 @@ public class Formulaire extends JDialog {
 	    content.add(panMail);
 	    content.add(panConcert);
 	    content.add(panPlace);
-//	    content.add(panPrix);
 	    
 	    JPanel control = new JPanel();
 	    JButton okBouton = new JButton("Valider");
 	    
 	    
-	    okBouton.addActionListener(new ActionListener(){
-	    	
-	      public void actionPerformed(ActionEvent arg0) {    
-	        zInfo = new PopUpInfo(nom.getText(), prenom.getText(), mail.getText(), (String)sexe.getSelectedItem(), (String)concert.getSelectedItem(), getPlace());
-	        setVisible(false);
-	       
-	        		
-	        try {
-			      Class.forName("org.postgresql.Driver");
-			      System.out.println("Driver O.K.");
+	    okBouton.addActionListener(new ActionListener() {  		
+	    
+	    		public void actionPerformed(ActionEvent arg0) {    
+	    	        zInfo = new PopUpInfo(nom.getText(), prenom.getText(), mail.getText(), (String)sexe.getSelectedItem(), (String)concert.getSelectedItem(), getPlace());
+	    	        setVisible(false);
+	    	       
+	    	        		
+	    	        try {
+	    			      Class.forName("org.postgresql.Driver");
+	    			      System.out.println("Driver O.K.");
 
-			      //correspond à l'adresse de la base de données
-			      String url = "jdbc:postgresql://localhost:5432/Billeterie";
-			      String user = "postgres";
-			      String passwd = "marion";
+	    			      //correspond à l'adresse de la base de données
+	    			      String url = "jdbc:postgresql://localhost:5432/Billeterie";
+	    			      String user = "postgres";
+	    			      String passwd = "marion";
 
-			      //permet la communication entre la BDD et l'appli.
-			      Connection conn = DriverManager.getConnection(url, user, passwd);
-			      System.out.println("Connexion effective !");
-			      
-			      Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-			      stm.executeUpdate("INSERT INTO billet (nom, prenom, email, groupe, sexe, typeplace) VALUES('"+PopUpInfo.getNom()+"','"+PopUpInfo.getPrenom()+"','"+PopUpInfo.getMail()+"','"+PopUpInfo.getConcert()+"','"+PopUpInfo.getSexe()+"','"+PopUpInfo.getPlace()+"')");
-			      System.out.println("Info envoyées dans la base de données.");
-			      
-			         
-			    } catch (Exception e) {
-			    		System.out.println("Attention, il y a un problème pour joindre la base de données de la Billeterie.");
-			    		e.printStackTrace();
-			    }
-	        
-	      }
+	    			      //permet la communication entre la BDD et l'appli.
+	    			      Connection conn = DriverManager.getConnection(url, user, passwd);
+	    			      System.out.println("Connexion effective !");
+	   
+	    			      Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+	    			      stm.executeUpdate("INSERT INTO billet (nom, prenom, email, groupe, sexe, typeplace) VALUES('"+PopUpInfo.getNom()+"','"+PopUpInfo.getPrenom()+"','"+PopUpInfo.getMail()+"','"+PopUpInfo.getConcert()+"','"+PopUpInfo.getSexe()+"','"+PopUpInfo.getPlace()+"')");
+	    			      System.out.println("Info envoyées dans la base de données.");
+	    			      
+	    			         
+	    			    } catch (Exception e) {
+	    			    		System.out.println("Attention, il y a un problème pour joindre la base de données de la Billeterie.");
+	    			    		e.printStackTrace();
+	    			    }
+	    	      
+	    	    	}
+	      
 	     
 	      public String getPlace(){
 		        return (place1.isSelected()) ? place1.getText() : 

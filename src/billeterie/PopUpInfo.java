@@ -42,7 +42,7 @@ public class PopUpInfo {
 	
 	  public String toString(){
 	    String str;
-	    if(this.nom != null && this.prenom != null && this.mail != null && this.sexe != null && this.concert != null && this.place != null){
+	    if(this.nom != null || this.prenom != null || this.mail != null || this.sexe != null || this.concert != null || this.place != null){
 	      str = "Récapitulatif des informations :"+"\n";
 	      str += "Civilité : " + this.sexe + "\n";
 	      str += "Nom : " + this.nom + "\n";
