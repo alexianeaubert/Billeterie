@@ -27,8 +27,8 @@ public class Formulaire extends JDialog {
 	
 	private PopUpInfo zInfo = new PopUpInfo();
 	  private boolean sendData;
-	  private JLabel titreLabel, nomLabel, prenomLabel, sexeLabel, concertLabel, placeLabel, mailLabel;
-	  private JRadioButton tranche1, tranche2;
+	  private JLabel titreLabel, prixLabel, nomLabel, prenomLabel, sexeLabel, concertLabel, placeLabel, mailLabel;
+	  private JRadioButton place1, place2;
 	  private JComboBox sexe, concert;
 	  private JTextField nom, prenom, mail;
 
@@ -119,16 +119,25 @@ public class Formulaire extends JDialog {
 	    panPlace.setBackground(Color.white);
 	    panPlace.setBorder(BorderFactory.createTitledBorder("Places Disponibles"));
 	    panPlace.setPreferredSize(new Dimension(500, 60));
-	    tranche1 = new JRadioButton("Assis");
-	    tranche1.setSelected(true);
-	    tranche1.setActionCommand("Assis");
-	    tranche2 = new JRadioButton("Debout");
-	    tranche2.setActionCommand("Debout");
+	    place1 = new JRadioButton("Assis");
+	    place1.setSelected(true);
+	    place1.setActionCommand("Assis");
+	    place2 = new JRadioButton("Debout");
+	    place2.setActionCommand("Debout");
 	    ButtonGroup bg = new ButtonGroup();
-	    bg.add(tranche1);
-	    bg.add(tranche2);
-	    panPlace.add(tranche1);
-	    panPlace.add(tranche2);
+	    bg.add(place1);
+	    bg.add(place2);
+	    panPlace.add(place1);
+	    panPlace.add(place2);
+	    
+//	    JPanel panPrix = new JPanel();
+//	    panPrix.setBackground(Color.white);
+//	    panPrix.setBorder(BorderFactory.createTitledBorder("Prix"));
+//	    panPrix.setPreferredSize(new Dimension(500, 60));
+//	    prixLabel = new JLabel("150€");
+//		Font police1 = new Font("Tahoma", Font.BOLD, 12);
+//		prixLabel.setFont(police1);
+//		panPrix.add(prixLabel);
 	  
 	  	JPanel content = new JPanel();
 	    content.setBackground(Color.WHITE);
@@ -138,6 +147,7 @@ public class Formulaire extends JDialog {
 	    content.add(panMail);
 	    content.add(panConcert);
 	    content.add(panPlace);
+//	    content.add(panPrix);
 	    
 	    JPanel control = new JPanel();
 	    JButton okBouton = new JButton("Valider");
@@ -146,13 +156,9 @@ public class Formulaire extends JDialog {
 	    okBouton.addActionListener(new ActionListener(){
 	    	
 	      public void actionPerformed(ActionEvent arg0) {    
-	    	  
 	        zInfo = new PopUpInfo(nom.getText(), prenom.getText(), mail.getText(), (String)sexe.getSelectedItem(), (String)concert.getSelectedItem(), getPlace());
 	        setVisible(false);
-	        
-
-	        if(bg.getSelection().getActionCommand() == "Assis") {
-	        		String tranche1 = "place assise";
+	       
 	        		
 	        try {
 			      Class.forName("org.postgresql.Driver");
@@ -168,7 +174,7 @@ public class Formulaire extends JDialog {
 			      System.out.println("Connexion effective !");
 			      
 			      Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-			      stm.executeUpdate("INSERT INTO billet (nom, prenom, email, groupe, sexe, typeplace) VALUES('"+nom.getText()+"','"+prenom.getText()+"','"+mail.getText()+"','"+concert.getSelectedItem()+"','"+sexe.getSelectedItem()+"','"+tranche1+"')");
+			      stm.executeUpdate("INSERT INTO billet (nom, prenom, email, groupe, sexe, typeplace) VALUES('"+PopUpInfo.getNom()+"','"+PopUpInfo.getPrenom()+"','"+PopUpInfo.getMail()+"','"+PopUpInfo.getConcert()+"','"+PopUpInfo.getSexe()+"','"+PopUpInfo.getPlace()+"')");
 			      System.out.println("Info envoyées dans la base de données.");
 			      
 			         
@@ -176,40 +182,13 @@ public class Formulaire extends JDialog {
 			    		System.out.println("Attention, il y a un problème pour joindre la base de données de la Billeterie.");
 			    		e.printStackTrace();
 			    }
-			
-	      }else {
-	    	  	String tranche2 = "place debout";
-	    	  	try {
-				      Class.forName("org.postgresql.Driver");
-				      System.out.println("Driver O.K.");
-
-				      //correspond à l'adresse de la base de données
-				      String url = "jdbc:postgresql://localhost:5432/Billeterie";
-				      String user = "postgres";
-				      String passwd = "marion";
-
-				      //permet la communication entre la BDD et l'appli.
-				      Connection conn = DriverManager.getConnection(url, user, passwd);
-				      System.out.println("Connexion effective !");
-				      
-				      Statement stm = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-				      stm.executeUpdate("INSERT INTO billet (nom, prenom, email, groupe, sexe, typeplace) VALUES('"+nom.getText()+"','"+prenom.getText()+"','"+mail.getText()+"','"+concert.getSelectedItem()+"','"+sexe.getSelectedItem()+"','"+tranche2+"')");
-				      System.out.println("Info envoyées dans la base de données.");
-				      
-				         
-				    } catch (Exception e) {
-				    		System.out.println("Attention, il y a un problème pour joindre la base de données de la Billeterie.");
-				    		e.printStackTrace();
-				    }
-	      	}
-	        
 	        
 	      }
 	     
 	      public String getPlace(){
-		        return (tranche1.isSelected()) ? tranche1.getText() : 
-		               (tranche2.isSelected()) ? tranche2.getText() : 
-		                tranche1.getText();  
+		        return (place1.isSelected()) ? place1.getText() : 
+		               (place2.isSelected()) ? place2.getText() : 
+		                place1.getText();  
 		      }
 	      
 	    });
