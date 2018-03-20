@@ -9,11 +9,7 @@ public class Test {
 
 	public static void main(String[] main) {
 
-		Formulaire form = new Formulaire();
-		
-		
-		
-		  
+		PopUp form = new PopUp();  
 		
 	}
 
